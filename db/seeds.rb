@@ -1,40 +1,39 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-
-# IMPORTANT: Do NOT add Administrator data here!
-# Administrator accounts should be created manually by user.
-# This seeds file is only for application data (products, categories, etc.)
-
-puts "🌱 Seeding database..."
-
 # Clear existing data
 puts "Clearing existing data..."
 Application.destroy_all
 Category.destroy_all
 AppVersion.destroy_all
+puts "  ✓ Data cleared"
 
-# Create categories based on jingbao-store structure
+# Create categories
 puts "Creating categories..."
-
-categories_data = [
-  { name: "游戏娱乐", icon: "🎮", description: "适配智能眼镜的游戏应用，提供沉浸式游戏体验", display_order: 1 },
-  { name: "影音视频", icon: "🎬", description: "专为眼镜优化的视频播放和影音应用", display_order: 2 },
-  { name: "阅读学习", icon: "📖", description: "电子书阅读和学习辅助应用", display_order: 3 },
-  { name: "工具效率", icon: "🛠️", description: "提升效率的实用工具应用", display_order: 4 },
-  { name: "运动健康", icon: "🏃", description: "运动追踪和健康管理应用", display_order: 5 },
-  { name: "手机应用", icon: "📱", description: "可与眼镜搭配使用的手机应用，如蓝牙键盘、虚拟鼠标等配件类应用", display_order: 6 },
-  { name: "创意设计", icon: "🎨", description: "图像处理和创意设计应用", display_order: 7 },
-  { name: "社交网络", icon: "🌐", description: "社交通讯和网络应用", display_order: 8 }
-]
-
-categories = categories_data.map do |cat_data|
-  category = Category.create!(cat_data)
-  puts "  ✓ Created category: #{category.name}"
-  category
-end
-
-# Create sample applications
-puts "Creating sample applications..."
+categories = Category.create!([
+  {
+    name: "游戏娱乐",
+    icon: "🎮",
+    description: "各类休闲和动作游戏，专为智能眼镜优化",
+    display_order: 1
+  },
+  {
+    name: "影音视频",
+    icon: "🎬",
+    description: "视频播放器、音乐播放器等多媒体应用",
+    display_order: 2
+  },
+  {
+    name: "手机应用",
+    icon: "📱",
+    description: "配合智能眼镜使用的手机端应用",
+    display_order: 3
+  },
+  {
+    name: "工具效率",
+    icon: "🔧",
+    description: "实用工具类应用，提升使用效率",
+    display_order: 4
+  }
+])
+puts "  ✓ Created #{categories.length} categories"
 
 # Sample app for 游戏娱乐
 game_category = categories.find { |c| c.name == "游戏娱乐" }
@@ -44,7 +43,11 @@ Application.create!([
     package_name: "com.rokid.bee.game",
     version: "1.0.0",
     description: "经典的小蜜蜂射击游戏，完美适配智能眼镜，支持手势控制和语音操作。体验复古游戏的乐趣，享受全新的AR游戏体验。",
-    icon: "🐝",
+    icon_url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&fit=crop",
+    screenshots: [
+      "https://raw.githubusercontent.com/jingbao-store/jingbao-store/main/apps/applications/productivity/runsight/screenshot.jpeg",
+      "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&h=1400&fit=crop"
+    ],
     download_url: "https://github.com/jingbao-store/releases/download/v1.0.0/bee-game.apk",
     file_size: "13 MB",
     file_size_bytes: 13631488,
@@ -62,7 +65,11 @@ Application.create!([
     package_name: "com.jingbao.space.adventure",
     version: "2.1.0",
     description: "在浩瀚的宇宙中探险，驾驶飞船完成各种任务。支持3D视觉效果，为眼镜设备特别优化。",
-    icon: "🚀",
+    icon_url: "https://images.unsplash.com/photo-1614728263952-84ea256f9679?w=200&h=200&fit=crop",
+    screenshots: [
+      "https://images.unsplash.com/photo-1538370965046-79c0d6907d47?w=800&h=1400&fit=crop",
+      "https://images.unsplash.com/photo-1608889825271-9e98d32df5ec?w=800&h=1400&fit=crop"
+    ],
     download_url: "https://example.com/space-adventure.apk",
     file_size: "25 MB",
     file_size_bytes: 26214400,
@@ -85,7 +92,11 @@ Application.create!([
     package_name: "com.jingbao.ar.player",
     version: "2.5.1",
     description: "专为智能眼镜优化的视频播放器，支持多种格式，字幕显示，手势控制播放进度。享受私人影院般的观影体验。",
-    icon: "📺",
+    icon_url: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=200&h=200&fit=crop",
+    screenshots: [
+      "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=800&h=1400&fit=crop",
+      "https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?w=800&h=1400&fit=crop"
+    ],
     download_url: "https://example.com/ar-player.apk",
     file_size: "18 MB",
     file_size_bytes: 18874368,
@@ -108,7 +119,11 @@ Application.create!([
     package_name: "io.appground.blek",
     version: "1.2.0",
     description: "将您的手机变成蓝牙键盘，配合智能眼镜使用，提供便捷的文字输入体验。支持多种布局和快捷键设置。",
-    icon: "⌨️",
+    icon_url: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=200&h=200&fit=crop",
+    screenshots: [
+      "https://images.unsplash.com/photo-1629654291663-b91ad427698f?w=800&h=1400&fit=crop",
+      "https://images.unsplash.com/photo-1595675024853-0f3ec9098ac7?w=800&h=1400&fit=crop"
+    ],
     download_url: "https://play.google.com/store/apps/details?id=io.appground.blek",
     file_size: "8 MB",
     file_size_bytes: 8388608,
@@ -126,7 +141,11 @@ Application.create!([
     package_name: "com.jingbao.virtual.mouse",
     version: "3.0.2",
     description: "将手机变成无线鼠标和触摸板，配合眼镜实现精准的交互控制。支持手势操作和自定义按键。",
-    icon: "🖱️",
+    icon_url: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=200&h=200&fit=crop",
+    screenshots: [
+      "https://images.unsplash.com/photo-1555617778-02745084786f?w=800&h=1400&fit=crop",
+      "https://images.unsplash.com/photo-1563206767-5b18f218e8de?w=800&h=1400&fit=crop"
+    ],
     download_url: "https://example.com/virtual-mouse.apk",
     file_size: "6 MB",
     file_size_bytes: 6291456,
@@ -144,7 +163,11 @@ Application.create!([
     package_name: "com.jingbao.gamepad.mapper",
     version: "1.5.0",
     description: "将手机变成游戏手柄，通过蓝牙连接眼镜，为游戏提供更好的操作体验。支持按键映射和震动反馈。",
-    icon: "🎮",
+    icon_url: "https://images.unsplash.com/photo-1592840496694-26d035b52b48?w=200&h=200&fit=crop",
+    screenshots: [
+      "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=800&h=1400&fit=crop",
+      "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&h=1400&fit=crop"
+    ],
     download_url: "https://example.com/gamepad-mapper.apk",
     file_size: "10 MB",
     file_size_bytes: 10485760,
@@ -167,7 +190,11 @@ Application.create!([
     package_name: "com.jingbao.ar.recorder",
     version: "1.3.0",
     description: "专业的AR录像应用，记录您在智能眼镜中看到的一切。支持高清录制和实时预览。",
-    icon: "📹",
+    icon_url: "https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=200&h=200&fit=crop",
+    screenshots: [
+      "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&h=1400&fit=crop",
+      "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=800&h=1400&fit=crop"
+    ],
     download_url: "https://example.com/ar-recorder.apk",
     file_size: "15 MB",
     file_size_bytes: 15728640,

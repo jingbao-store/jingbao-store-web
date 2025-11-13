@@ -37,7 +37,7 @@
           <div class="card-elevated">
             <div class="card-body">
               <div class="flex items-start gap-3 mb-3">
-                <div class="text-4xl"><%= app.icon || "📦" %></div>
+                <%= image_tag(app.icon_url, alt: app.name, class: "w-16 h-16 object-cover rounded") if app.icon_url.present? %>
                 <div class="flex-1 min-w-0">
                   <h3 class="font-bold text-base text-primary truncate"><%= app.name %></h3>
                   <p class="text-xs text-muted font-mono">

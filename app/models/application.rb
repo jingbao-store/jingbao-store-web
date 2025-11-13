@@ -30,4 +30,12 @@ class Application < ApplicationRecord
   def features_array=(value)
     self.features = value.to_json if value.is_a?(Array)
   end
+
+  def screenshots_array
+    screenshots || []
+  end
+
+  def screenshots_array=(value)
+    self.screenshots = value if value.is_a?(Array)
+  end
 end

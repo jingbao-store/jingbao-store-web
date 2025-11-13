@@ -10,12 +10,12 @@
     <!-- App Details Window -->
     <div class="window-frame">
       <div class="window-title-bar">
-        <span><%= @application.icon || "📦" %> <%= @application.name %></span>
+        <span><%= @application.name %></span>
       </div>
       <div class="window-content">
         <!-- App Header -->
         <div class="flex items-start gap-4 mb-6 pb-6 border-b-2 border-border">
-          <div class="text-6xl"><%= @application.icon || "📦" %></div>
+          <%= image_tag(@application.icon_url, alt: @application.name, class: "w-24 h-24 object-cover rounded-lg") if @application.icon_url.present? %>
           <div class="flex-1">
             <h1 class="text-3xl font-bold text-primary mb-2"><%= @application.name %></h1>
             <p class="text-sm text-muted font-mono mb-3">
@@ -37,6 +37,18 @@
           <h2 class="text-lg font-bold text-primary mb-3">📝 应用介绍</h2>
           <p class="text-sm text-secondary font-mono leading-relaxed whitespace-pre-wrap"><%= @application.description || "暂无详细介绍" %></p>
         </div>
+
+        <!-- Screenshots -->
+        <% if @application.screenshots_array.any? %>
+          <div class="mb-6">
+            <h2 class="text-lg font-bold text-primary mb-3">📸 应用截图</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+              <% @application.screenshots_array.each do |screenshot| %>
+                <%= image_tag(screenshot, alt: @application.name, class: "w-full h-auto rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer") %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
 
         <!-- Features -->
         <% if @application.features_array.any? %>

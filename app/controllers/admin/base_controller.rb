@@ -3,6 +3,7 @@ class Admin::BaseController < ActionController::Base
   layout 'admin'
 
   include FriendlyErrorHandlingConcern
+  include DevelopmentCsrfBypassConcern
 
   protect_from_forgery with: :exception
 

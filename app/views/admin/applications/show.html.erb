@@ -65,10 +65,11 @@
           </div>
         </div>
 
-        <!-- Icon -->
+        <!-- Icon URL -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Icon</label>
-          <div class="text-lg font-medium text-gray-900 dark:text-gray-100"><%= @application.icon %></div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Icon URL</label>
+          <%= image_tag(@application.icon_url, alt: @application.name, class: "w-24 h-24 object-cover rounded-lg") if @application.icon_url.present? %>
+          <div class="text-sm text-gray-600 dark:text-gray-400 mt-2"><%= @application.icon_url %></div>
         </div>
 
         <!-- Download url -->

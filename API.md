@@ -36,14 +36,7 @@ GET /api/v1/categories
       {
         "id": 1,
         "name": "小蜜蜂游戏",
-        "package_name": "com.rokid.bee.game",
-        "version": "1.0.0",
-        "icon": "🐝",
-        "download_url": "https://github.com/jingbao-store/releases/download/v1.0.0/bee-game.apk",
-        "file_size": "13 MB",
-        "file_size_bytes": 13631488,
-        "rating": "4.5",
-        "downloads": 1250
+        "icon": "🐝"
       }
     ]
   },
@@ -58,14 +51,7 @@ GET /api/v1/categories
       {
         "id": 4,
         "name": "蓝牙键盘",
-        "package_name": "io.appground.blek",
-        "version": "3.2.1",
-        "icon": "⌨️",
-        "download_url": "https://play.google.com/store/apps/details?id=io.appground.blek",
-        "file_size": "8 MB",
-        "file_size_bytes": 8388608,
-        "rating": "4.7",
-        "downloads": 8920
+        "icon": "⌨️"
       }
     ]
   }
@@ -83,6 +69,8 @@ GET /api/v1/categories
 | description | string | 分类描述 |
 | display_order | integer | 显示顺序 |
 | applications | array | 该分类下的应用列表 |
+
+注：分类下的应用列表仅返回 id、name、icon 三个字段。
 
 ---
 
@@ -249,6 +237,10 @@ curl http://localhost:3000/api/v1/applications/1
   "min_android_version": "8.0",
   "permissions_array": ["网络访问", "存储权限"],
   "features_array": ["手势控制", "语音操作", "多关卡挑战"],
+  "screenshots": [
+    "/rails/active_storage/blobs/xxx/screenshot-1.png",
+    "/rails/active_storage/blobs/yyy/screenshot-2.png"
+  ],
   "category": {
     "id": 1,
     "name": "游戏娱乐",

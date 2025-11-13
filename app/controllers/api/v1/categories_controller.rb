@@ -7,7 +7,7 @@ class Api::V1::CategoriesController < ApplicationController
       only: [:id, :name, :slug, :icon, :description, :display_order],
       include: {
         applications: {
-          only: [:id, :name, :package_name, :version, :icon, :download_url, :file_size, :file_size_bytes, :rating, :downloads]
+          only: [:id, :name, :icon]
         }
       }
     )

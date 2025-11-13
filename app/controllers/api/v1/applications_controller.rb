@@ -17,10 +17,12 @@ class Api::V1::ApplicationsController < ApplicationController
 
   def show
     @application = Application.includes(:category).find(params[:id])
-    render json: @application.as_json(
+    data = @application.as_json(
       only: [:id, :name, :package_name, :version, :description, :icon, :download_url, :file_size, :file_size_bytes, :developer, :rating, :downloads, :last_updated, :min_android_version, :created_at, :updated_at],
       include: { category: { only: [:id, :name, :slug, :icon] } },
       methods: [:permissions_array, :features_array]
     )
+    data['screenshots'] = @application.screenshot_urls
+    render json: data
   end
 end

@@ -35,4 +35,9 @@ class Application < ApplicationRecord
   end
 
 
+  # 返回截图的相对路径数组，供 API 使用
+  def screenshot_urls
+    return [] unless screenshots.attached?
+    screenshots.map { |shot| Rails.application.routes.url_helpers.rails_blob_path(shot, only_path: true) }
+  end
 end

@@ -15,7 +15,13 @@
       <div class="window-content">
         <!-- App Header -->
         <div class="flex items-start gap-4 mb-6 pb-6 border-b-2 border-border">
-          <%= image_tag(@application.icon_url, alt: @application.name, class: "w-24 h-24 object-cover rounded-lg") if @application.icon_url.present? %>
+          <% if @application.icon.attached? %>
+            <%= image_tag @application.icon, alt: @application.name, class: "w-24 h-24 object-cover rounded-lg" %>
+          <% else %>
+            <div class="w-24 h-24 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center text-4xl">
+              <%= @application.category&.icon || '📱' %>
+            </div>
+          <% end %>
           <div class="flex-1">
             <h1 class="text-3xl font-bold text-primary mb-2"><%= @application.name %></h1>
             <p class="text-sm text-muted font-mono mb-3">
@@ -39,12 +45,12 @@
         </div>
 
         <!-- Screenshots -->
-        <% if @application.screenshots_array.any? %>
+        <% if @application.screenshots.attached? %>
           <div class="mb-6">
             <h2 class="text-lg font-bold text-primary mb-3">📸 应用截图</h2>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-              <% @application.screenshots_array.each do |screenshot| %>
-                <%= image_tag(screenshot, alt: @application.name, class: "w-full h-auto rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer") %>
+              <% @application.screenshots.each do |screenshot| %>
+                <%= image_tag screenshot, alt: @application.name, class: "w-full h-auto rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer" %>
               <% end %>
             </div>
           </div>

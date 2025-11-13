@@ -5,7 +5,6 @@ FactoryBot.define do
     package_name { "MyString" }
     version { "MyString" }
     description { "MyText" }
-    icon_url { "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&fit=crop" }
     download_url { "MyString" }
     file_size { "MyString" }
     file_size_bytes { nil }

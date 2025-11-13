@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_13_073614) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_13_130229) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -92,7 +92,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_13_073614) do
     t.string "package_name", null: false
     t.string "version"
     t.text "description"
-    t.string "icon_url"
     t.string "download_url"
     t.string "file_size"
     t.bigint "file_size_bytes"
@@ -106,7 +105,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_13_073614) do
     t.bigint "category_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.jsonb "screenshots", default: []
     t.index ["category_id"], name: "index_applications_on_category_id"
     t.index ["downloads"], name: "index_applications_on_downloads"
     t.index ["package_name"], name: "index_applications_on_package_name", unique: true

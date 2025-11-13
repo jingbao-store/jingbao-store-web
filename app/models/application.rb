@@ -1,5 +1,8 @@
 class Application < ApplicationRecord
   belongs_to :category
+  
+  has_one_attached :icon
+  has_many_attached :screenshots
 
   validates :name, presence: true
   validates :package_name, presence: true, uniqueness: true
@@ -31,11 +34,5 @@ class Application < ApplicationRecord
     self.features = value.to_json if value.is_a?(Array)
   end
 
-  def screenshots_array
-    screenshots || []
-  end
 
-  def screenshots_array=(value)
-    self.screenshots = value if value.is_a?(Array)
-  end
 end

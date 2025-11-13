@@ -65,11 +65,28 @@
           </div>
         </div>
 
-        <!-- Icon URL -->
+        <!-- Icon -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Icon URL</label>
-          <%= image_tag(@application.icon_url, alt: @application.name, class: "w-24 h-24 object-cover rounded-lg") if @application.icon_url.present? %>
-          <div class="text-sm text-gray-600 dark:text-gray-400 mt-2"><%= @application.icon_url %></div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Icon</label>
+          <% if @application.icon.attached? %>
+            <%= image_tag @application.icon, alt: @application.name, class: "w-24 h-24 object-cover rounded-lg" %>
+          <% else %>
+            <div class="text-sm text-gray-500 italic">No icon uploaded</div>
+          <% end %>
+        </div>
+
+        <!-- Screenshots -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Screenshots</label>
+          <% if @application.screenshots.attached? %>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              <% @application.screenshots.each do |screenshot| %>
+                <%= image_tag screenshot, alt: @application.name, class: "w-full h-32 object-cover rounded-lg" %>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="text-sm text-gray-500 italic">No screenshots uploaded</div>
+          <% end %>
         </div>
 
         <!-- Download url -->

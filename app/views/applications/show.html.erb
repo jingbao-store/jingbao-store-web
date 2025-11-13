@@ -114,12 +114,21 @@
         <!-- Download Button -->
         <div class="pt-6 border-t-2 border-border">
           <% if @application.download_url.present? %>
-            <%= link_to @application.download_url, class: "btn-primary btn-lg w-full text-center", target: "_blank" do %>
-              📥 下载APK (<%= @application.file_size || "未知大小" %>)
+            <% if Current.user %>
+              <%= link_to @application.download_url, class: "btn-primary btn-lg w-full text-center", target: "_blank" do %>
+                📥 下载APK (<%= @application.file_size || "未知大小" %>)
+              <% end %>
+              <p class="text-xs text-muted text-center mt-3 font-mono">
+                下载后请通过镜宝APP安装到您的智能眼镜设备
+              </p>
+            <% else %>
+              <%= link_to sign_in_path, class: "btn-primary btn-lg w-full text-center" do %>
+                🔑 登录后下载 (<%= @application.file_size || "未知大小" %>)
+              <% end %>
+              <p class="text-xs text-muted text-center mt-3 font-mono">
+                请先登录账号，登录后即可免费下载所有应用
+              </p>
             <% end %>
-            <p class="text-xs text-muted text-center mt-3 font-mono">
-              下载后请通过镜宝APP安装到您的智能眼镜设备
-            </p>
           <% else %>
             <div class="alert alert-warning">
               <p class="font-mono">暂无下载链接，请联系管理员。</p>

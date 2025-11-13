@@ -52,6 +52,7 @@ Rails.application.routes.draw do
       delete 'logout', to: 'sessions#destroy'
       resources :categories, only: [:index, :show]
       resources :applications, only: [:index, :show]
+      get 'app_version', to: 'app_versions#show'
     end
   end
 
@@ -63,6 +64,7 @@ Rails.application.routes.draw do
 
   # Do not write business logic at admin dashboard
   namespace :admin do
+    resources :app_versions
     resources :applications
     resources :categories
     resources :admin_oplogs, only: [:index, :show]

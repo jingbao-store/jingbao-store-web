@@ -259,6 +259,74 @@ curl http://localhost:3000/api/v1/applications/1
 
 ---
 
+### 5. 获取镜宝 APP 最新版本信息
+
+获取镜宝手机客户端的最新版本信息，用于应用内更新检测。
+
+**请求**
+
+```http
+GET /api/v1/app_version
+```
+
+**请求示例**
+
+```bash
+curl http://localhost:3000/api/v1/app_version
+```
+
+**响应示例**
+
+```json
+{
+  "appId": "com.jingbao.store",
+  "latestVersion": "1.3.0",
+  "versionCode": 5,
+  "versionName": "1.3.0",
+  "updateTime": "2025-11-05",
+  "downloadUrl": "https://gitee.com/jingbao-store/jingbao-store/releases/download/v1.3.0/jingbao-store-v1.3.0.apk",
+  "fileSize": "7.5M",
+  "fileSizeBytes": 7879270,
+  "minAndroidVersion": "7.0",
+  "releaseNotes": [
+    "新增自动更新功能",
+    "优化应用启动速度",
+    "改进界面交互体验",
+    "修复已知问题"
+  ],
+  "forceUpdate": false,
+  "changelog": "v1.2.0\n- 新增自动更新功能\n- 优化应用启动速度\n- 改进界面交互体验\n- 修复已知问题"
+}
+```
+
+**字段说明**
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| appId | string | 应用包名 |
+| latestVersion | string | 最新版本号 |
+| versionCode | integer | 版本代码（用于版本比较） |
+| versionName | string | 版本名称 |
+| updateTime | date | 更新日期 |
+| downloadUrl | string | APK 下载链接 |
+| fileSize | string | 文件大小（易读格式） |
+| fileSizeBytes | integer | 文件大小（字节） |
+| minAndroidVersion | string | 最低安卓版本 |
+| releaseNotes | array | 更新说明列表 |
+| forceUpdate | boolean | 是否强制更新 |
+| changelog | string | 完整的更新日志 |
+
+**使用场景**
+
+此 API 主要用于镜宝手机客户端的自动更新检测功能：
+
+1. 应用启动时调用此接口
+2. 比较本地 versionCode 与返回的 versionCode
+3. 如果返回的 versionCode 大于本地，提示用户更新
+4. 如果 forceUpdate 为 true，强制用户更新
+
+---
+
 ## 错误响应
 
 当请求失败时，API 会返回相应的 HTTP 状态码和错误信息。
@@ -297,6 +365,9 @@ curl http://localhost:3000/api/v1/applications
 
 # 获取特定应用
 curl http://localhost:3000/api/v1/applications/4
+
+# 获取镜宝 APP 最新版本
+curl http://localhost:3000/api/v1/app_version
 ```
 
 ### Android/Kotlin 示例
@@ -341,6 +412,24 @@ class JingBaoApiClient {
             override fun onResponse(call: Call, response: Response) {
                 response.body?.string()?.let {
                     callback(JSONArray(it))
+                }
+            }
+        })
+    }
+    
+    fun getAppVersion(callback: (JSONObject?) -> Unit) {
+        val request = Request.Builder()
+            .url("$baseUrl/app_version")
+            .build()
+        
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                callback(null)
+            }
+            
+            override fun onResponse(call: Call, response: Response) {
+                response.body?.string()?.let {
+                    callback(JSONObject(it))
                 }
             }
         })

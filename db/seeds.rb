@@ -11,6 +11,7 @@ puts "🌱 Seeding database..."
 puts "Clearing existing data..."
 Application.destroy_all
 Category.destroy_all
+AppVersion.destroy_all
 
 # Create categories based on jingbao-store structure
 puts "Creating categories..."
@@ -181,9 +182,27 @@ Application.create!([
   }
 ])
 
+# Create Jingbao APP version
+puts "Creating Jingbao APP version..."
+AppVersion.create!(
+  app_id: "com.jingbao.store",
+  version_name: "1.3.0",
+  version_code: 5,
+  update_time: Date.parse("2025-11-05"),
+  download_url: "https://gitee.com/jingbao-store/jingbao-store/releases/download/v1.3.0/jingbao-store-v1.3.0.apk",
+  file_size: "7.5M",
+  file_size_bytes: 7879270,
+  min_android_version: "7.0",
+  release_notes: ["新增自动更新功能", "优化应用启动速度", "改进界面交互体验", "修复已知问题"].to_json,
+  changelog: "v1.2.0\n- 新增自动更新功能\n- 优化应用启动速度\n- 改进界面交互体验\n- 修复已知问题",
+  force_update: false
+)
+puts "  ✓ Created app version: v#{AppVersion.current.version_name}"
+
 puts "✅ Seeding completed!"
 puts "  - Created #{Category.count} categories"
 puts "  - Created #{Application.count} applications"
+puts "  - Created #{AppVersion.count} app version(s)"
 puts ""
 puts "Categories:"
 Category.ordered.each do |cat|

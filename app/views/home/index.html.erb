@@ -21,8 +21,15 @@
               📚 浏览应用
             <% end %>
           <% else %>
-            <%= link_to sign_up_path, class: "btn-primary btn-lg" do %>
-              🚀 立即注册
+            <% app_version = AppVersion.current %>
+            <% if app_version %>
+              <%= link_to app_version.download_url, class: "btn-primary btn-lg", target: "_blank" do %>
+                📥 镜宝手机端
+              <% end %>
+            <% else %>
+              <%= link_to sign_up_path, class: "btn-primary btn-lg" do %>
+                🚀 立即注册
+              <% end %>
             <% end %>
             <%= link_to sign_in_path, class: "btn-secondary btn-lg" do %>
               🔑 登录

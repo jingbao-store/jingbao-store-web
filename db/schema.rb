@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_12_110522) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_13_042500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -67,6 +67,24 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_12_110522) do
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_administrators_on_name", unique: true
     t.index ["role"], name: "index_administrators_on_role"
+  end
+
+  create_table "app_versions", force: :cascade do |t|
+    t.string "app_id"
+    t.string "version_name"
+    t.integer "version_code"
+    t.date "update_time"
+    t.string "download_url"
+    t.string "file_size"
+    t.bigint "file_size_bytes"
+    t.string "min_android_version"
+    t.text "release_notes"
+    t.text "changelog"
+    t.boolean "force_update", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["app_id"], name: "index_app_versions_on_app_id"
+    t.index ["version_code"], name: "index_app_versions_on_version_code"
   end
 
   create_table "applications", force: :cascade do |t|

@@ -5,7 +5,7 @@
       <div class="flex items-center space-x-8">
         <div class="flex-shrink-0 flex items-center">
           <%= link_to root_path, class: "text-xl font-bold text-gray-900 dark:text-gray-50 flex items-center gap-2" do %>
-            <span class="text-2xl">📱</span>
+            <%= image_tag 'logo.png', alt: Rails.application.config.x.appname, class: "h-8 w-8" %>
             <span><%= Rails.application.config.x.appname %></span>
           <% end %>
         </div>

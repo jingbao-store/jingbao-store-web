@@ -1,0 +1,185 @@
+<% content_for :title, "Edit App version" %>
+
+<div class="container-md">
+  <!-- Page Title -->
+  <div class="flex items-center space-x-4 mb-6">
+    <%= link_to admin_app_version_path(@app_version.id), class: "btn-ghost text-sm py-1 px-3" do %>
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+      Back to App version
+    <% end %>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-50">Edit App version</h1>
+  </div>
+
+  <!-- Form -->
+  <div class="card bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+    <div class="card-body">
+      <%= form_with model: [:admin, @app_version], local: true, class: "space-y-6" do |form| %>
+        <%= render 'shared/form_error_message', model: @app_version %>
+
+        <!-- App -->
+        <div class="mb-4">
+          <%= form.label :app_id, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" do %>
+            App<% if field_required?(@app_version, :app_id) %> <span class="text-red-500">*</span><% end %>
+          <% end %>
+          <%= form.text_field :app_id, {
+            placeholder: "Enter app...",
+            class: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-50"
+          }.merge(field_required?(@app_version, :app_id) ? { required: true } : {}) %>
+          <% if @app_version.errors[:app_id].any? %>
+            <p class="text-sm text-red-500 mt-1"><%= @app_version.errors[:app_id].first %></p>
+          <% end %>
+        </div>
+
+        <!-- Version name -->
+        <div class="mb-4">
+          <%= form.label :version_name, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" do %>
+            Version name<% if field_required?(@app_version, :version_name) %> <span class="text-red-500">*</span><% end %>
+          <% end %>
+          <%= form.text_field :version_name, {
+            placeholder: "Enter version name...",
+            class: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-50"
+          }.merge(field_required?(@app_version, :version_name) ? { required: true } : {}) %>
+          <% if @app_version.errors[:version_name].any? %>
+            <p class="text-sm text-red-500 mt-1"><%= @app_version.errors[:version_name].first %></p>
+          <% end %>
+        </div>
+
+        <!-- Version code -->
+        <div class="mb-4">
+          <%= form.label :version_code, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" do %>
+            Version code<% if field_required?(@app_version, :version_code) %> <span class="text-red-500">*</span><% end %>
+          <% end %>
+          <%= form.number_field :version_code, {
+            placeholder: "Enter version code...",
+            class: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-50"
+          }.merge(field_required?(@app_version, :version_code) ? { required: true } : {}) %>
+          <% if @app_version.errors[:version_code].any? %>
+            <p class="text-sm text-red-500 mt-1"><%= @app_version.errors[:version_code].first %></p>
+          <% end %>
+        </div>
+
+        <!-- Update time -->
+        <div class="mb-4">
+          <%= form.label :update_time, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" do %>
+            Update time<% if field_required?(@app_version, :update_time) %> <span class="text-red-500">*</span><% end %>
+          <% end %>
+          <%= form.date_field :update_time, {
+            placeholder: "Enter update time...",
+            class: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-50"
+          }.merge(field_required?(@app_version, :update_time) ? { required: true } : {}) %>
+          <% if @app_version.errors[:update_time].any? %>
+            <p class="text-sm text-red-500 mt-1"><%= @app_version.errors[:update_time].first %></p>
+          <% end %>
+        </div>
+
+        <!-- Download url -->
+        <div class="mb-4">
+          <%= form.label :download_url, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" do %>
+            Download url<% if field_required?(@app_version, :download_url) %> <span class="text-red-500">*</span><% end %>
+          <% end %>
+          <%= form.text_field :download_url, {
+            placeholder: "Enter download url...",
+            class: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-50"
+          }.merge(field_required?(@app_version, :download_url) ? { required: true } : {}) %>
+          <% if @app_version.errors[:download_url].any? %>
+            <p class="text-sm text-red-500 mt-1"><%= @app_version.errors[:download_url].first %></p>
+          <% end %>
+        </div>
+
+        <!-- File size -->
+        <div class="mb-4">
+          <%= form.label :file_size, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" do %>
+            File size<% if field_required?(@app_version, :file_size) %> <span class="text-red-500">*</span><% end %>
+          <% end %>
+          <%= form.text_field :file_size, {
+            placeholder: "Enter file size...",
+            class: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-50"
+          }.merge(field_required?(@app_version, :file_size) ? { required: true } : {}) %>
+          <% if @app_version.errors[:file_size].any? %>
+            <p class="text-sm text-red-500 mt-1"><%= @app_version.errors[:file_size].first %></p>
+          <% end %>
+        </div>
+
+        <!-- File size bytes -->
+        <div class="mb-4">
+          <%= form.label :file_size_bytes, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" do %>
+            File size bytes<% if field_required?(@app_version, :file_size_bytes) %> <span class="text-red-500">*</span><% end %>
+          <% end %>
+          <%= form.number_field :file_size_bytes, {
+            placeholder: "Enter file size bytes...",
+            class: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-50"
+          }.merge(field_required?(@app_version, :file_size_bytes) ? { required: true } : {}) %>
+          <% if @app_version.errors[:file_size_bytes].any? %>
+            <p class="text-sm text-red-500 mt-1"><%= @app_version.errors[:file_size_bytes].first %></p>
+          <% end %>
+        </div>
+
+        <!-- Min android version -->
+        <div class="mb-4">
+          <%= form.label :min_android_version, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" do %>
+            Min android version<% if field_required?(@app_version, :min_android_version) %> <span class="text-red-500">*</span><% end %>
+          <% end %>
+          <%= form.text_field :min_android_version, {
+            placeholder: "Enter min android version...",
+            class: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-50"
+          }.merge(field_required?(@app_version, :min_android_version) ? { required: true } : {}) %>
+          <% if @app_version.errors[:min_android_version].any? %>
+            <p class="text-sm text-red-500 mt-1"><%= @app_version.errors[:min_android_version].first %></p>
+          <% end %>
+        </div>
+
+        <!-- Release notes -->
+        <div class="mb-4">
+          <%= form.label :release_notes, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" do %>
+            Release notes<% if field_required?(@app_version, :release_notes) %> <span class="text-red-500">*</span><% end %>
+          <% end %>
+          <% release_notes_value = @app_version.release_notes_array.join("\n") %>
+          <%= form.text_area :release_notes, {
+            value: release_notes_value,
+            rows: 5,
+            placeholder: 'Enter one note per line, e.g.:\n新增自动更新功能\n优化应用启动速度',
+            class: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-50"
+          }.merge(field_required?(@app_version, :release_notes) ? { required: true } : {}) %>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">每行一条更新说明，会自动转换为JSON数组</p>
+          <% if @app_version.errors[:release_notes].any? %>
+            <p class="text-sm text-red-500 mt-1"><%= @app_version.errors[:release_notes].first %></p>
+          <% end %>
+        </div>
+
+        <!-- Changelog -->
+        <div class="mb-4">
+          <%= form.label :changelog, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" do %>
+            Changelog<% if field_required?(@app_version, :changelog) %> <span class="text-red-500">*</span><% end %>
+          <% end %>
+          <%= form.text_area :changelog, {
+            rows: 5,
+            placeholder: "Enter changelog...",
+            class: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-50"
+          }.merge(field_required?(@app_version, :changelog) ? { required: true } : {}) %>
+          <% if @app_version.errors[:changelog].any? %>
+            <p class="text-sm text-red-500 mt-1"><%= @app_version.errors[:changelog].first %></p>
+          <% end %>
+        </div>
+
+        <!-- Force update -->
+        <div class="mb-4">
+          <label class="flex items-center cursor-pointer">
+            <%= form.check_box :force_update,
+                  class: "mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700" %>
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Force update</span>
+          </label>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex justify-end space-x-3">
+          <%= link_to admin_app_version_path(@app_version.id), class: "btn-ghost" do %>
+            Cancel
+          <% end %>
+          <%= form.submit "Update App version", class: "btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

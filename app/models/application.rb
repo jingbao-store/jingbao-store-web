@@ -3,11 +3,13 @@ class Application < ApplicationRecord
   
   has_one_attached :icon
   has_many_attached :screenshots
+  has_one_attached :apk_file
 
   validates :name, presence: true
   validates :package_name, presence: true, uniqueness: true
   validates :downloads, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :rating, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 5 }, allow_nil: true
+  validate :must_have_download_source
 
   scope :recent, -> { order(last_updated: :desc, created_at: :desc) }
   scope :popular, -> { order(downloads: :desc) }
@@ -47,6 +49,51 @@ class Application < ApplicationRecord
       Rails.application.routes.url_helpers.rails_blob_path(self.icon, only_path: true)
     else
       self[:icon]
+    end
+  end
+
+  # 返回最终的下载 URL：优先使用上传的 APK 文件，否则使用 download_url 字段
+  def final_download_url
+    if apk_file.attached?
+      Rails.application.routes.url_helpers.rails_blob_url(apk_file, only_path: false)
+    else
+      download_url
+    end
+  end
+
+  # 自动计算并更新文件大小（当 APK 文件上传时）
+  def update_file_size_from_apk
+    return unless apk_file.attached?
+    
+    self.file_size_bytes = apk_file.byte_size
+    self.file_size = format_file_size(file_size_bytes)
+  end
+
+  private
+
+  # 验证：必须有下载来源（APK 文件或下载 URL）
+  def must_have_download_source
+    if !apk_file.attached? && download_url.blank?
+      errors.add(:base, "必须提供 APK 文件或下载 URL 其中之一")
+    end
+  end
+
+  # 格式化文件大小
+  def format_file_size(bytes)
+    return "0 B" if bytes.nil? || bytes == 0
+    
+    units = ['B', 'KB', 'MB', 'GB', 'TB']
+    exponent = (Math.log(bytes) / Math.log(1024)).floor
+    exponent = [exponent, units.length - 1].min
+    
+    size = bytes.to_f / (1024 ** exponent)
+    
+    if size >= 100
+      "#{size.round(0).to_i} #{units[exponent]}"
+    elsif size >= 10
+      "#{size.round(1)} #{units[exponent]}"
+    else
+      "#{size.round(2)} #{units[exponent]}"
     end
   end
 end

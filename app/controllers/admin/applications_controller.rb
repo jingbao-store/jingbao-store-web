@@ -14,6 +14,9 @@ class Admin::ApplicationsController < Admin::BaseController
 
   def create
     @application = Application.new(application_params)
+    
+    # 如果上传了 APK 文件，自动计算文件大小
+    @application.update_file_size_from_apk if @application.apk_file.attached?
 
     if @application.save
       redirect_to admin_application_path(@application), notice: 'Application was successfully created.'
@@ -26,7 +29,13 @@ class Admin::ApplicationsController < Admin::BaseController
   end
 
   def update
-    if @application.update(application_params)
+    # 如果上传了新的 APK 文件，自动计算文件大小
+    if application_params[:apk_file].present?
+      @application.apk_file.attach(application_params[:apk_file])
+      @application.update_file_size_from_apk
+    end
+    
+    if @application.update(application_params.except(:apk_file))
       redirect_to admin_application_path(@application), notice: 'Application was successfully updated.'
     else
       render :edit, status: :unprocessable_entity
@@ -45,6 +54,6 @@ class Admin::ApplicationsController < Admin::BaseController
   end
 
   def application_params
-    params.require(:application).permit(:name, :package_name, :version, :description, :icon, :download_url, :file_size, :file_size_bytes, :developer, :rating, :downloads, :last_updated, :min_android_version, :permissions, :features, :category_id, screenshots: [])
+    params.require(:application).permit(:name, :package_name, :version, :description, :icon, :apk_file, :download_url, :file_size, :file_size_bytes, :developer, :rating, :downloads, :last_updated, :min_android_version, :permissions, :features, :category_id, screenshots: [])
   end
 end

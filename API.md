@@ -181,7 +181,7 @@ GET /api/v1/applications
 | version | string | 版本号 |
 | description | string | 应用描述 |
 | icon | string | 应用图标（emoji） |
-| download_url | string | APK 下载链接 |
+| download_url | string | APK 下载链接（优先返回上传的 APK 文件 URL，否则返回外部链接） |
 | file_size | string | 文件大小（易读格式） |
 | file_size_bytes | integer | 文件大小（字节） |
 | developer | string | 开发者 |
@@ -463,6 +463,10 @@ async function getApplication(id) {
 3. **CORS**: 如果需要从浏览器直接调用，需要配置 CORS
 4. **认证**: 当前 API 为公开只读接口，无需认证
 5. **版本**: 当前 API 版本为 v1，未来可能增加新版本
+6. **下载 URL**: 
+   - 如果应用管理员上传了 APK 文件，`download_url` 返回的是服务器托管的 APK 文件 URL
+   - 如果应用管理员提供的是外部链接，`download_url` 返回的是该外部链接
+   - API 会自动选择可用的下载来源（优先使用上传的 APK 文件）
 
 ---
 

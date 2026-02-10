@@ -9,7 +9,7 @@ This API supports two types of reports:
 ## API Endpoint
 
 ```
-POST /api/crash-report
+POST /api/v1/crash-report
 ```
 
 ## Request Headers
@@ -188,7 +188,7 @@ X-App-Version-Code: 9
 ### cURL Example (User Feedback)
 
 ```bash
-curl -X POST http://localhost:3000/api/crash-report \
+curl -X POST http://localhost:3000/api/v1/crash-report \
   -H "Content-Type: application/json" \
   -H "User-Agent: JingbaoStore/2.0.3 (Android)" \
   -d '{
@@ -211,7 +211,7 @@ curl -X POST http://localhost:3000/api/crash-report \
 ### cURL Example (Crash Report)
 
 ```bash
-curl -X POST http://localhost:3000/api/crash-report \
+curl -X POST http://localhost:3000/api/v1/crash-report \
   -H "Content-Type: application/json" \
   -d '{
     "reportType": "crash_report",
@@ -271,7 +271,7 @@ suspend fun submitUserFeedback(
         appLogs = getRecentLogs() // Collect recent logcat entries
     )
     
-    val response = apiClient.post("/api/crash-report") {
+    val response = apiClient.post("/api/v1/crash-report") {
         contentType(ContentType.Application.Json)
         setBody(request)
     }
@@ -338,7 +338,7 @@ suspend fun submitCrashReport(throwable: Throwable) {
         appLogs = getRecentLogs() // Collect recent logcat entries
     )
     
-    val response = apiClient.post("/api/crash-report") {
+    val response = apiClient.post("/api/v1/crash-report") {
         contentType(ContentType.Application.Json)
         setBody(request)
     }

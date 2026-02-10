@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-RSpec.describe "Api::CrashReports", type: :request do
-  describe "POST /api/crash-report" do
+RSpec.describe "Api::V1::CrashReports", type: :request do
+  describe "POST /api/v1/crash-report" do
     context "with crash_report type" do
       let(:valid_crash_report_attributes) do
         {
@@ -36,12 +36,12 @@ RSpec.describe "Api::CrashReports", type: :request do
 
       it "creates a new CrashReport" do
         expect {
-          post "/api/crash-report", params: valid_crash_report_attributes.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
+          post "/api/v1/crash-report", params: valid_crash_report_attributes.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
         }.to change(CrashReport, :count).by(1)
       end
 
       it "returns success response" do
-        post "/api/crash-report", params: valid_crash_report_attributes.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
+        post "/api/v1/crash-report", params: valid_crash_report_attributes.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
         
         expect(response).to have_http_status(:created)
         json_response = JSON.parse(response.body)
@@ -51,7 +51,7 @@ RSpec.describe "Api::CrashReports", type: :request do
       end
 
       it "stores the crash data correctly" do
-        post "/api/crash-report", params: valid_crash_report_attributes.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
+        post "/api/v1/crash-report", params: valid_crash_report_attributes.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
         
         crash_report = CrashReport.last
         expect(crash_report.report_type).to eq('crash_report')
@@ -95,12 +95,12 @@ RSpec.describe "Api::CrashReports", type: :request do
 
       it "creates a new user feedback with crash info" do
         expect {
-          post "/api/crash-report", params: valid_user_feedback_with_crash.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
+          post "/api/v1/crash-report", params: valid_user_feedback_with_crash.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
         }.to change(CrashReport, :count).by(1)
       end
 
       it "stores the feedback message, crash data, and app logs" do
-        post "/api/crash-report", params: valid_user_feedback_with_crash.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
+        post "/api/v1/crash-report", params: valid_user_feedback_with_crash.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
         
         crash_report = CrashReport.last
         expect(crash_report.report_type).to eq('user_feedback')
@@ -132,12 +132,12 @@ RSpec.describe "Api::CrashReports", type: :request do
 
       it "creates a new user feedback without crash info" do
         expect {
-          post "/api/crash-report", params: valid_user_feedback_only.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
+          post "/api/v1/crash-report", params: valid_user_feedback_only.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
         }.to change(CrashReport, :count).by(1)
       end
 
       it "stores only the feedback message" do
-        post "/api/crash-report", params: valid_user_feedback_only.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
+        post "/api/v1/crash-report", params: valid_user_feedback_only.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
         
         crash_report = CrashReport.last
         expect(crash_report.report_type).to eq('user_feedback')
@@ -157,12 +157,12 @@ RSpec.describe "Api::CrashReports", type: :request do
 
       it "does not create a new CrashReport" do
         expect {
-          post "/api/crash-report", params: invalid_attributes.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
+          post "/api/v1/crash-report", params: invalid_attributes.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
         }.to change(CrashReport, :count).by(0)
       end
 
       it "returns error response" do
-        post "/api/crash-report", params: invalid_attributes.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
+        post "/api/v1/crash-report", params: invalid_attributes.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
         
         expect(response).to have_http_status(:unprocessable_entity)
         json_response = JSON.parse(response.body)

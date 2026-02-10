@@ -47,9 +47,8 @@ Rails.application.routes.draw do
 
   # API routes for curl-friendly authentication
   namespace :api do
-    post 'crash-report', to: 'crash_reports#create'
-    
     namespace :v1 do
+      post 'crash-report', to: 'crash_reports#create'
       post 'login', to: 'sessions#login'
       delete 'logout', to: 'sessions#destroy'
       resources :categories, only: [:index, :show]

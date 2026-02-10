@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_10_151833) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_10_152945) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -135,6 +135,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_10_151833) do
     t.string "report_type"
     t.text "feedback_message"
     t.datetime "timestamp"
+    t.text "app_logs"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|

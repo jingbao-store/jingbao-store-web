@@ -88,7 +88,8 @@ RSpec.describe "Api::CrashReports", type: :request do
           memoryInfo: {
             availableMB: 45,
             totalMB: 128
-          }
+          },
+          appLogs: "02-10 22:30:12.345 D/MainActivity: onCreate called\n02-10 22:30:12.567 I/AdbClient: USB device attached\n02-10 22:30:43.890 E/AdbClient: Failed to install APK: exec cat push failed"
         }
       end
 
@@ -98,13 +99,14 @@ RSpec.describe "Api::CrashReports", type: :request do
         }.to change(CrashReport, :count).by(1)
       end
 
-      it "stores the feedback message and crash data" do
+      it "stores the feedback message, crash data, and app logs" do
         post "/api/crash-report", params: valid_user_feedback_with_crash.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
         
         crash_report = CrashReport.last
         expect(crash_report.report_type).to eq('user_feedback')
         expect(crash_report.feedback_message).to eq('点击安装按钮后应用闪退，无法安装任何应用')
         expect(crash_report.crash_info['exceptionType']).to eq('java.lang.RuntimeException')
+        expect(crash_report.app_logs).to include('E/AdbClient: Failed to install APK')
       end
     end
 

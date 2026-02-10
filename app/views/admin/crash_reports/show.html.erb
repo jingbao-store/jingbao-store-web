@@ -161,6 +161,18 @@
     </div>
   <% end %>
 
+  <!-- Application Logs Section -->
+  <% if @crash_report.app_logs.present? %>
+    <div class="card bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 mb-6">
+      <div class="card-body">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-50 mb-4">Application Logs</h2>
+        <div class="bg-gray-800 dark:bg-gray-950 text-gray-100 p-4 rounded-lg overflow-x-auto">
+          <pre class="text-sm font-mono whitespace-pre-wrap"><%= @crash_report.app_logs %></pre>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
   <!-- Additional Info Section -->
   <% if @crash_report.additional_info.present? %>
     <div class="card bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 mb-6">

@@ -59,6 +59,7 @@ X-App-Version-Code: 9
     "totalMB": 128,
     "maxMB": 256
   },
+  "appLogs": "02-10 22:30:12.345 D/MainActivity: onCreate called\n02-10 22:30:12.567 I/AdbClient: USB device attached\n02-10 22:30:43.890 E/AdbClient: Failed to install APK: exec cat push failed\n...",
   "additionalInfo": {
     "lastActivity": "MainActivity",
     "usbConnected": true,
@@ -151,6 +152,7 @@ X-App-Version-Code: 9
 | `crashInfo` | object | Crash details with stack trace | `crash_report` |
 | `timestamp` | datetime | Report timestamp | Optional |
 | `memoryInfo` | object | Memory usage information | Optional |
+| `appLogs` | string | Recent application logs (multiline text) | Optional |
 | `additionalInfo` | object | Additional context data | Optional |
 
 ## Response Format
@@ -244,6 +246,7 @@ data class UserFeedbackRequest(
     val deviceInfo: DeviceInfo,
     val crashInfo: CrashInfo? = null,
     val memoryInfo: MemoryInfo? = null,
+    val appLogs: String? = null,
     val additionalInfo: Map<String, Any>? = null
 )
 
@@ -264,12 +267,23 @@ suspend fun submitUserFeedback(
             androidVersion = Build.VERSION.RELEASE,
             sdkInt = Build.VERSION.SDK_INT
         ),
-        crashInfo = if (includeCrashInfo) getCrashInfo() else null
+        crashInfo = if (includeCrashInfo) getCrashInfo() else null,
+        appLogs = getRecentLogs() // Collect recent logcat entries
     )
     
     val response = apiClient.post("/api/crash-report") {
         contentType(ContentType.Application.Json)
         setBody(request)
+    }
+}
+
+// Helper function to collect recent logs
+fun getRecentLogs(): String? {
+    return try {
+        val process = Runtime.getRuntime().exec("logcat -d -t 100")
+        process.inputStream.bufferedReader().use { it.readText() }
+    } catch (e: Exception) {
+        null
     }
 }
 ```
@@ -283,6 +297,7 @@ data class CrashReportRequest(
     val deviceInfo: DeviceInfo,
     val crashInfo: CrashInfo,
     val memoryInfo: MemoryInfo? = null,
+    val appLogs: String? = null,
     val additionalInfo: Map<String, Any>? = null
 )
 
@@ -319,12 +334,23 @@ suspend fun submitCrashReport(throwable: Throwable) {
                 )
             }
         ),
-        memoryInfo = getMemoryInfo()
+        memoryInfo = getMemoryInfo(),
+        appLogs = getRecentLogs() // Collect recent logcat entries
     )
     
     val response = apiClient.post("/api/crash-report") {
         contentType(ContentType.Application.Json)
         setBody(request)
+    }
+}
+
+// Helper function to collect recent logs
+fun getRecentLogs(): String? {
+    return try {
+        val process = Runtime.getRuntime().exec("logcat -d -t 100")
+        process.inputStream.bufferedReader().use { it.readText() }
+    } catch (e: Exception) {
+        null
     }
 }
 ```
@@ -338,6 +364,7 @@ Access the crash reports and user feedback in the admin panel:
   - Report type badge (User Feedback / Crash Report)
   - User feedback message (if applicable)
   - Full stack traces (if applicable)
+  - Application logs (if provided)
   - Device and app information
   - Memory usage data
 

@@ -36,6 +36,8 @@ FactoryBot.define do
       }
     end
     
+    app_logs { "02-10 10:30:12.345 D/MainActivity: onCreate called\n02-10 10:30:12.567 I/AppModule: Initializing\n02-10 10:30:43.890 E/CrashHandler: Fatal error occurred" }
+    
     additional_info do
       {
         usbConnected: false,
@@ -48,12 +50,14 @@ FactoryBot.define do
       feedback_message { "The app crashes when I try to install applications" }
       crash_info { nil }
       memory_info { nil }
+      app_logs { nil }
       additional_info { nil }
     end
     
     trait :user_feedback_with_crash do
       report_type { 'user_feedback' }
       feedback_message { "点击安装按钮后应用闪退，无法安装任何应用" }
+      app_logs { "02-10 22:30:12.345 D/MainActivity: onCreate called\n02-10 22:30:12.567 I/AdbClient: USB device attached\n02-10 22:30:43.890 E/AdbClient: Failed to install APK: exec cat push failed" }
     end
   end
 end

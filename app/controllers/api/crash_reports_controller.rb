@@ -30,6 +30,7 @@ class Api::CrashReportsController < ApplicationController
       device_info: params[:deviceInfo],
       crash_info: params[:crashInfo],
       memory_info: params[:memoryInfo],
+      app_logs: params[:appLogs],
       additional_info: params[:additionalInfo]
     }
   end

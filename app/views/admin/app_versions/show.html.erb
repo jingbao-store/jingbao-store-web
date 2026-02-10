@@ -63,10 +63,36 @@
           <div class="text-lg font-medium text-gray-900 dark:text-gray-100"><%= @app_version.update_time&.strftime('%Y-%m-%d %H:%M') %></div>
         </div>
 
-        <!-- Download url -->
+        <!-- Download Source -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Download url</label>
-          <div class="text-lg font-medium text-gray-900 dark:text-gray-100"><%= @app_version.download_url %></div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">下载来源 (Download Source)</label>
+          <% if @app_version.apk_file.attached? %>
+            <div class="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+              <p class="text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">
+                📦 已上传 APK 文件
+              </p>
+              <p class="text-sm text-gray-700 dark:text-gray-300">
+                文件名: <%= @app_version.apk_file.filename %><br>
+                大小: <%= number_to_human_size(@app_version.apk_file.byte_size) %>
+              </p>
+              <div class="mt-2">
+                <%= link_to @app_version.final_download_url, target: "_blank", class: "text-blue-600 dark:text-blue-400 hover:underline text-sm" do %>
+                  ↓ 下载 APK
+                <% end %>
+              </div>
+            </div>
+          <% elsif @app_version.download_url.present? %>
+            <div class="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+              <p class="text-sm font-medium text-green-700 dark:text-green-300 mb-2">
+                🔗 外部链接
+              </p>
+              <div class="text-sm text-gray-700 dark:text-gray-300 break-all">
+                <%= link_to @app_version.download_url, @app_version.download_url, target: "_blank", class: "text-green-600 dark:text-green-400 hover:underline" %>
+              </div>
+            </div>
+          <% else %>
+            <div class="text-sm text-gray-500 dark:text-gray-400">未设置</div>
+          <% end %>
         </div>
 
         <!-- File size -->

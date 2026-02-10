@@ -11,7 +11,7 @@ class Api::V1::AppVersionsController < ApplicationController
         versionCode: @app_version.version_code,
         versionName: @app_version.version_name,
         updateTime: @app_version.update_time&.strftime('%Y-%m-%d'),
-        downloadUrl: @app_version.download_url,
+        downloadUrl: @app_version.final_download_url,
         fileSize: @app_version.file_size,
         fileSizeBytes: @app_version.file_size_bytes,
         minAndroidVersion: @app_version.min_android_version,

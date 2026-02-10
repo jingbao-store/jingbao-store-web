@@ -15,6 +15,9 @@ class Admin::AppVersionsController < Admin::BaseController
   def create
     @app_version = AppVersion.new(app_version_params)
     convert_release_notes_to_json(@app_version)
+    
+    # 如果上传了 APK 文件，自动计算文件大小
+    @app_version.update_file_size_from_apk if @app_version.apk_file.attached?
 
     if @app_version.save
       redirect_to admin_app_version_path(@app_version), notice: 'App version was successfully created.'
@@ -27,7 +30,13 @@ class Admin::AppVersionsController < Admin::BaseController
   end
 
   def update
-    @app_version.assign_attributes(app_version_params)
+    # 如果上传了新的 APK 文件，自动计算文件大小
+    if app_version_params[:apk_file].present?
+      @app_version.apk_file.attach(app_version_params[:apk_file])
+      @app_version.update_file_size_from_apk
+    end
+    
+    @app_version.assign_attributes(app_version_params.except(:apk_file))
     convert_release_notes_to_json(@app_version)
     
     if @app_version.save
@@ -49,7 +58,7 @@ class Admin::AppVersionsController < Admin::BaseController
   end
 
   def app_version_params
-    params.require(:app_version).permit(:app_id, :version_name, :version_code, :update_time, :download_url, :file_size, :file_size_bytes, :min_android_version, :release_notes, :changelog, :force_update)
+    params.require(:app_version).permit(:app_id, :version_name, :version_code, :update_time, :download_url, :apk_file, :file_size, :file_size_bytes, :min_android_version, :release_notes, :changelog, :force_update)
   end
 
   def convert_release_notes_to_json(app_version)

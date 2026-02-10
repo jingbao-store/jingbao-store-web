@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_13_130229) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_10_150719) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -122,6 +122,16 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_13_130229) do
     t.index ["display_order"], name: "index_categories_on_display_order"
     t.index ["name"], name: "index_categories_on_name", unique: true
     t.index ["slug"], name: "index_categories_on_slug", unique: true
+  end
+
+  create_table "crash_reports", force: :cascade do |t|
+    t.jsonb "app_info"
+    t.jsonb "device_info"
+    t.jsonb "crash_info"
+    t.jsonb "memory_info"
+    t.jsonb "additional_info"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|

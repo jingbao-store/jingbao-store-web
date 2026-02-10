@@ -3,7 +3,7 @@
     <!-- Hero Section -->
     <div class="window-frame max-w-4xl mx-auto mb-8">
       <div class="window-title-bar">
-        <span>📱 镜宝应用商店 - JingBao App Store</span>
+        <span>📱 <%= Rails.application.config.x.appname %> - Smart Glasses App Store</span>
         <div class="flex gap-1">
           <div class="w-4 h-4 border-2 border-surface bg-danger"></div>
           <div class="w-4 h-4 border-2 border-surface bg-warning"></div>
@@ -11,7 +11,10 @@
         </div>
       </div>
       <div class="window-content text-center">
-        <h1 class="text-4xl font-bold text-primary mb-4">镜宝应用商店</h1>
+        <div class="flex items-center justify-center gap-4 mb-4">
+          <%= image_tag 'logo.png', alt: Rails.application.config.x.appname, class: "h-16 w-16" %>
+          <h1 class="text-4xl font-bold text-primary"><%= Rails.application.config.x.appname %></h1>
+        </div>
         <p class="text-xl text-secondary mb-2">一键安装，畅享智能眼镜应用生态</p>
         <p class="text-base text-muted font-mono mb-6">Your Smart Glasses App Marketplace</p>
         
@@ -21,7 +24,7 @@
             📚 浏览应用
           <% end %>
           <% if app_version %>
-            <%= link_to app_version.download_url, class: "btn-secondary btn-lg", target: "_blank" do %>
+            <%= link_to app_version.final_download_url, class: "btn-secondary btn-lg", target: "_blank" do %>
               📥 镜宝手机端
             <% end %>
           <% end %>

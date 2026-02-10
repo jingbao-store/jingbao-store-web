@@ -47,6 +47,8 @@ Rails.application.routes.draw do
 
   # API routes for curl-friendly authentication
   namespace :api do
+    post 'crash-report', to: 'crash_reports#create'
+    
     namespace :v1 do
       post 'login', to: 'sessions#login'
       delete 'logout', to: 'sessions#destroy'
@@ -64,6 +66,8 @@ Rails.application.routes.draw do
 
   # Do not write business logic at admin dashboard
   namespace :admin do
+    resources :crash_reports, only: [:index, :show, :destroy]
+    resources :users
     resources :app_versions
     resources :applications
     resources :categories

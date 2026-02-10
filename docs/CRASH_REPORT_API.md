@@ -1,25 +1,34 @@
-# Crash Report API Documentation
+# Crash Report & User Feedback API
 
 ## Overview
-The Crash Report API allows applications to submit crash reports for debugging and monitoring purposes.
 
-## Endpoint
+This API supports two types of reports:
+1. **crash_report** - Automatic crash reports (no user feedback)
+2. **user_feedback** - User-initiated feedback (may include crash logs)
 
-### Submit Crash Report
+## API Endpoint
 
-**POST** `/api/crash-report`
-
-Submit a new crash report to the system.
-
-#### Request Headers
 ```
+POST /api/crash-report
+```
+
+## Request Headers
+
+```http
 Content-Type: application/json
+User-Agent: JingbaoStore/2.0.3 (Android)
+X-App-Version: 2.0.3
+X-App-Version-Code: 9
 ```
 
-#### Request Body
+## Request Format
+
+### 1. User Feedback with Crash Log
 
 ```json
 {
+  "reportType": "user_feedback",
+  "feedbackMessage": "点击安装按钮后应用闪退，无法安装任何应用",
   "appInfo": {
     "packageName": "com.jingbao.store",
     "versionName": "2.0.3",
@@ -28,87 +37,182 @@ Content-Type: application/json
   "deviceInfo": {
     "manufacturer": "vivo",
     "model": "V2339A",
+    "brand": "vivo",
+    "product": "PD2339",
     "androidVersion": "14",
-    "sdkInt": 34
+    "sdkInt": 34,
+    "locale": "zh_CN",
+    "timezone": "Asia/Shanghai"
   },
   "crashInfo": {
     "timestamp": "2026-02-10T22:30:45+08:00",
+    "timestampMs": 1739196645000,
+    "threadName": "main",
+    "threadId": 2,
     "exceptionType": "java.lang.RuntimeException",
-    "exceptionMessage": "exec cat push failed",
-    "stackTrace": "java.lang.RuntimeException: exec cat push failed\n    at com.example.Test.main(Test.java:10)"
+    "exceptionMessage": "exec cat push failed: ",
+    "stackTrace": "java.lang.RuntimeException: exec cat push failed: \n    at com.jingbao.store.adb.AdbClient.installApk(AdbClient.kt:252)\n    ...",
+    "causedBy": null
   },
   "memoryInfo": {
     "availableMB": 45,
-    "totalMB": 128
+    "totalMB": 128,
+    "maxMB": 256
   },
   "additionalInfo": {
+    "lastActivity": "MainActivity",
     "usbConnected": true,
-    "glassesDeviceModel": "Rokid Max"
+    "glassesDeviceModel": "Rokid Max",
+    "networkType": "WIFI",
+    "batteryLevel": 85,
+    "isCharging": false
   }
 }
 ```
 
-#### Field Descriptions
+### 2. User Feedback Only (No Crash)
 
-##### appInfo (required)
-- `packageName` (string): Application package name
-- `versionName` (string): Human-readable version name
-- `versionCode` (number): Internal version code
+```json
+{
+  "reportType": "user_feedback",
+  "feedbackMessage": "建议增加深色模式支持",
+  "timestamp": "2026-02-10T22:30:45+08:00",
+  "appInfo": {
+    "packageName": "com.jingbao.store",
+    "versionName": "2.0.3",
+    "versionCode": 9
+  },
+  "deviceInfo": {
+    "manufacturer": "vivo",
+    "model": "V2339A",
+    "brand": "vivo",
+    "product": "PD2339",
+    "androidVersion": "14",
+    "sdkInt": 34,
+    "locale": "zh_CN",
+    "timezone": "Asia/Shanghai"
+  }
+}
+```
 
-##### deviceInfo (required)
-- `manufacturer` (string): Device manufacturer
-- `model` (string): Device model
-- `androidVersion` (string): Android OS version
-- `sdkInt` (number): Android SDK API level
+### 3. Automatic Crash Report
 
-##### crashInfo (required)
-- `timestamp` (string): ISO 8601 timestamp when crash occurred
-- `exceptionType` (string): Full class name of the exception
-- `exceptionMessage` (string): Exception message
-- `stackTrace` (string): Complete stack trace
+```json
+{
+  "reportType": "crash_report",
+  "appInfo": {
+    "packageName": "com.jingbao.store",
+    "versionName": "2.0.3",
+    "versionCode": 9
+  },
+  "deviceInfo": {
+    "manufacturer": "vivo",
+    "model": "V2339A",
+    "brand": "vivo",
+    "product": "PD2339",
+    "androidVersion": "14",
+    "sdkInt": 34,
+    "locale": "zh_CN",
+    "timezone": "Asia/Shanghai"
+  },
+  "crashInfo": {
+    "timestamp": "2026-02-10T22:30:45+08:00",
+    "timestampMs": 1739196645000,
+    "threadName": "main",
+    "threadId": 2,
+    "exceptionType": "java.lang.RuntimeException",
+    "exceptionMessage": "exec cat push failed: ",
+    "stackTrace": "java.lang.RuntimeException: exec cat push failed: \n    at com.jingbao.store.adb.AdbClient.installApk(AdbClient.kt:252)\n    ...",
+    "causedBy": null
+  },
+  "memoryInfo": {
+    "availableMB": 45,
+    "totalMB": 128,
+    "maxMB": 256
+  }
+}
+```
 
-##### memoryInfo (optional)
-- `availableMB` (number): Available memory in MB
-- `totalMB` (number): Total device memory in MB
+## Field Descriptions
 
-##### additionalInfo (optional)
-- Any additional key-value pairs relevant to the crash
+### Required Fields
 
-#### Success Response
+| Field | Type | Description | Required For |
+|-------|------|-------------|--------------|
+| `reportType` | string | Report type: `crash_report` or `user_feedback` | All reports |
+| `appInfo` | object | Application information | All reports |
+| `deviceInfo` | object | Device information | All reports |
 
-**Status Code:** `201 Created`
+### Conditional Fields
+
+| Field | Type | Description | Required For |
+|-------|------|-------------|--------------|
+| `feedbackMessage` | string | User's feedback message | `user_feedback` |
+| `crashInfo` | object | Crash details with stack trace | `crash_report` |
+| `timestamp` | datetime | Report timestamp | Optional |
+| `memoryInfo` | object | Memory usage information | Optional |
+| `additionalInfo` | object | Additional context data | Optional |
+
+## Response Format
+
+### Success Response
 
 ```json
 {
   "success": true,
   "message": "Crash report submitted successfully",
-  "id": 5
+  "id": 123
 }
 ```
 
-#### Error Response
+**HTTP Status Code**: `201 Created`
 
-**Status Code:** `422 Unprocessable Entity`
+### Error Response
 
 ```json
 {
   "success": false,
   "errors": [
-    "App info can't be blank",
-    "Device info can't be blank",
-    "Crash info can't be blank"
+    "Report type can't be blank",
+    "Report type is not included in the list"
   ]
 }
 ```
 
-## Example Usage
+**HTTP Status Code**: `422 Unprocessable Entity`
 
-### Using cURL
+## Usage Examples
+
+### cURL Example (User Feedback)
 
 ```bash
-curl -X POST http://your-server.com/api/crash-report \
-  -H 'Content-Type: application/json' \
+curl -X POST http://localhost:3000/api/crash-report \
+  -H "Content-Type: application/json" \
+  -H "User-Agent: JingbaoStore/2.0.3 (Android)" \
   -d '{
+    "reportType": "user_feedback",
+    "feedbackMessage": "应用很好用，但希望增加夜间模式",
+    "appInfo": {
+      "packageName": "com.jingbao.store",
+      "versionName": "2.0.3",
+      "versionCode": 9
+    },
+    "deviceInfo": {
+      "manufacturer": "vivo",
+      "model": "V2339A",
+      "androidVersion": "14",
+      "sdkInt": 34
+    }
+  }'
+```
+
+### cURL Example (Crash Report)
+
+```bash
+curl -X POST http://localhost:3000/api/crash-report \
+  -H "Content-Type: application/json" \
+  -d '{
+    "reportType": "crash_report",
     "appInfo": {
       "packageName": "com.jingbao.store",
       "versionName": "2.0.3",
@@ -124,94 +228,133 @@ curl -X POST http://your-server.com/api/crash-report \
       "timestamp": "2026-02-10T22:30:45+08:00",
       "exceptionType": "java.lang.RuntimeException",
       "exceptionMessage": "exec cat push failed",
-      "stackTrace": "java.lang.RuntimeException: exec cat push failed\n    at com.example.Test.main(Test.java:10)"
-    },
-    "memoryInfo": {
-      "availableMB": 45,
-      "totalMB": 128
-    },
-    "additionalInfo": {
-      "usbConnected": true,
-      "glassesDeviceModel": "Rokid Max"
+      "stackTrace": "java.lang.RuntimeException: exec cat push failed\n    at com.jingbao.store.adb.AdbClient.installApk(AdbClient.kt:252)"
     }
   }'
 ```
 
-### Using Android (Kotlin)
+### Android Kotlin Example (User Feedback)
 
 ```kotlin
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
+data class UserFeedbackRequest(
+    val reportType: String = "user_feedback",
+    val feedbackMessage: String,
+    val timestamp: String = Instant.now().toString(),
+    val appInfo: AppInfo,
+    val deviceInfo: DeviceInfo,
+    val crashInfo: CrashInfo? = null,
+    val memoryInfo: MemoryInfo? = null,
+    val additionalInfo: Map<String, Any>? = null
+)
 
-fun submitCrashReport(
-    packageName: String,
-    versionName: String,
-    versionCode: Int,
-    manufacturer: String,
-    model: String,
-    androidVersion: String,
-    sdkInt: Int,
-    exceptionType: String,
-    exceptionMessage: String,
-    stackTrace: String
+suspend fun submitUserFeedback(
+    message: String,
+    includeCrashInfo: Boolean = false
 ) {
-    val client = OkHttpClient()
+    val request = UserFeedbackRequest(
+        feedbackMessage = message,
+        appInfo = AppInfo(
+            packageName = context.packageName,
+            versionName = BuildConfig.VERSION_NAME,
+            versionCode = BuildConfig.VERSION_CODE
+        ),
+        deviceInfo = DeviceInfo(
+            manufacturer = Build.MANUFACTURER,
+            model = Build.MODEL,
+            androidVersion = Build.VERSION.RELEASE,
+            sdkInt = Build.VERSION.SDK_INT
+        ),
+        crashInfo = if (includeCrashInfo) getCrashInfo() else null
+    )
     
-    val json = JSONObject().apply {
-        put("appInfo", JSONObject().apply {
-            put("packageName", packageName)
-            put("versionName", versionName)
-            put("versionCode", versionCode)
-        })
-        put("deviceInfo", JSONObject().apply {
-            put("manufacturer", manufacturer)
-            put("model", model)
-            put("androidVersion", androidVersion)
-            put("sdkInt", sdkInt)
-        })
-        put("crashInfo", JSONObject().apply {
-            put("timestamp", System.currentTimeMillis().toString())
-            put("exceptionType", exceptionType)
-            put("exceptionMessage", exceptionMessage)
-            put("stackTrace", stackTrace)
-        })
-        put("memoryInfo", JSONObject().apply {
-            val runtime = Runtime.getRuntime()
-            put("availableMB", runtime.freeMemory() / 1024 / 1024)
-            put("totalMB", runtime.totalMemory() / 1024 / 1024)
-        })
-        put("additionalInfo", JSONObject())
+    val response = apiClient.post("/api/crash-report") {
+        contentType(ContentType.Application.Json)
+        setBody(request)
     }
-    
-    val mediaType = "application/json; charset=utf-8".toMediaType()
-    val body = json.toString().toRequestBody(mediaType)
-    
-    val request = Request.Builder()
-        .url("http://your-server.com/api/crash-report")
-        .post(body)
-        .build()
-    
-    client.newCall(request).execute()
 }
 ```
 
-## Admin Dashboard
+### Android Kotlin Example (Crash Report)
 
-Submitted crash reports can be viewed and managed in the admin dashboard at:
+```kotlin
+data class CrashReportRequest(
+    val reportType: String = "crash_report",
+    val appInfo: AppInfo,
+    val deviceInfo: DeviceInfo,
+    val crashInfo: CrashInfo,
+    val memoryInfo: MemoryInfo? = null,
+    val additionalInfo: Map<String, Any>? = null
+)
 
-`/admin/crash_reports`
+suspend fun submitCrashReport(throwable: Throwable) {
+    val request = CrashReportRequest(
+        appInfo = AppInfo(
+            packageName = context.packageName,
+            versionName = BuildConfig.VERSION_NAME,
+            versionCode = BuildConfig.VERSION_CODE
+        ),
+        deviceInfo = DeviceInfo(
+            manufacturer = Build.MANUFACTURER,
+            model = Build.MODEL,
+            brand = Build.BRAND,
+            product = Build.PRODUCT,
+            androidVersion = Build.VERSION.RELEASE,
+            sdkInt = Build.VERSION.SDK_INT,
+            locale = Locale.getDefault().toString(),
+            timezone = TimeZone.getDefault().id
+        ),
+        crashInfo = CrashInfo(
+            timestamp = Instant.now().toString(),
+            timestampMs = System.currentTimeMillis(),
+            threadName = Thread.currentThread().name,
+            threadId = Thread.currentThread().id,
+            exceptionType = throwable.javaClass.name,
+            exceptionMessage = throwable.message ?: "",
+            stackTrace = throwable.stackTraceToString(),
+            causedBy = throwable.cause?.let {
+                CausedBy(
+                    exceptionType = it.javaClass.name,
+                    exceptionMessage = it.message ?: "",
+                    stackTrace = it.stackTraceToString()
+                )
+            }
+        ),
+        memoryInfo = getMemoryInfo()
+    )
+    
+    val response = apiClient.post("/api/crash-report") {
+        contentType(ContentType.Application.Json)
+        setBody(request)
+    }
+}
+```
 
-The dashboard provides:
-- List view of all crash reports with filtering
-- Detailed view showing complete crash information including stack traces
-- Ability to delete crash reports
+## Admin Backend
+
+Access the crash reports and user feedback in the admin panel:
+
+- **List View**: `/admin/crash_reports` - Browse all reports with filtering by type
+- **Detail View**: `/admin/crash_reports/:id` - View complete report details including:
+  - Report type badge (User Feedback / Crash Report)
+  - User feedback message (if applicable)
+  - Full stack traces (if applicable)
+  - Device and app information
+  - Memory usage data
+
+The admin interface automatically adapts to show relevant sections based on the report type.
+
+## Validation Rules
+
+1. **report_type**: Must be either `crash_report` or `user_feedback`
+2. **appInfo**: Required for all report types
+3. **deviceInfo**: Required for all report types
+4. **feedbackMessage**: Required when `reportType` is `user_feedback`
+5. **crashInfo**: Required when `reportType` is `crash_report`
 
 ## Notes
 
-- No authentication is required for submitting crash reports
-- CSRF protection is disabled for this endpoint
-- All timestamps should be in ISO 8601 format
-- Stack traces should preserve newline characters for proper formatting
+- No authentication required for this endpoint
+- CSRF protection is disabled for this API
+- All JSON keys use camelCase format
+- Database stores data with snake_case column names
+- The API automatically converts between formats

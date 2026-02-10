@@ -1,5 +1,8 @@
 FactoryBot.define do
   factory :crash_report do
+    report_type { 'crash_report' }
+    timestamp { Time.current }
+    
     app_info do
       {
         packageName: "com.example.app",
@@ -38,6 +41,19 @@ FactoryBot.define do
         usbConnected: false,
         batteryLevel: 75
       }
+    end
+    
+    trait :user_feedback do
+      report_type { 'user_feedback' }
+      feedback_message { "The app crashes when I try to install applications" }
+      crash_info { nil }
+      memory_info { nil }
+      additional_info { nil }
+    end
+    
+    trait :user_feedback_with_crash do
+      report_type { 'user_feedback' }
+      feedback_message { "点击安装按钮后应用闪退，无法安装任何应用" }
     end
   end
 end

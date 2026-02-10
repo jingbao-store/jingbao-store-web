@@ -23,6 +23,9 @@ class Api::CrashReportsController < ApplicationController
   
   def crash_report_params
     {
+      report_type: params[:reportType],
+      feedback_message: params[:feedbackMessage],
+      timestamp: params[:timestamp],
       app_info: params[:appInfo],
       device_info: params[:deviceInfo],
       crash_info: params[:crashInfo],

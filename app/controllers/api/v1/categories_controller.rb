@@ -39,7 +39,7 @@ class Api::V1::CategoriesController < ApplicationController
           version: app.version,
           description: app.description,
           icon: app.icon_for_api,
-          download_url: app.download_url,
+          download_url: app.final_download_url,
           file_size: app.file_size,
           file_size_bytes: app.file_size_bytes,
           developer: app.developer,
